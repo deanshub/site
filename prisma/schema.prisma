@@ -1,0 +1,19 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model PageView {
+  id        String   @id @default(cuid())
+  pathname  String
+  duration  Int // milliseconds
+  timestamp DateTime
+  createdAt DateTime @default(now())
+
+  @@index([pathname])
+  @@index([timestamp])
+}

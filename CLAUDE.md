@@ -1,42 +1,31 @@
-# Fintrack — Project Conventions
+@AGENTS.md
 
-## UI
-- Use shadcn/ui components (new-york style, lucide icons).
-- Add new shadcn components via `bunx shadcn add <component>`.
+# Project Conventions
 
-## React
-- Default to Server Components. Only add `"use client"` when required (e.g., SWR hooks, event handlers, browser APIs).
-- Each custom (non-shadcn) component lives in its own file under `components/`.
+This is an AI-generated web app. The entire codebase is written and maintained by Claude. Keep things simple, consistent, and easy to extend.
+
+## Stack
+
+- **Framework:** Next.js 16 (App Router, Turbopack)
+- **Language:** TypeScript (strict mode)
+- **UI:** shadcn/ui (base-nova style, lucide icons) — add via `bunx shadcn add <component>`
+- **Styling:** Tailwind CSS v4 — theme defined in `app/globals.css`
+- **Data fetching:** SWR with global `suspense: true` and JSON fetcher (`components/swr-provider.tsx`)
+- **Dates:** date-fns
+- **Linting:** Biome — `bun run lint` to check, `bun run format` to fix
+- **Package manager:** Bun
+- **Path aliases:** `@/*` maps to project root
+
+## Rules
+
+- Default to Server Components. Only add `"use client"` when needed (hooks, event handlers, browser APIs).
+- Each component gets its own file under `components/`.
 - Use named exports only — no default exports.
-
-## Data Fetching
-- Use SWR (`import useSWR from "swr"`) for client-side data fetching. SWR is configured globally with `suspense: true` and a default JSON fetcher via `SWRProvider` in the root layout.
-- Prefer React Suspense boundaries (`<Suspense fallback={...}>`) for loading states instead of manual `isLoading` checks.
-- Wrap data-fetching components with React Error Boundaries for error fallback UI.
-- Use Next.js `loading.tsx` and `error.tsx` files in route segments for route-level loading and error states.
-
-## Styling
-- Tailwind CSS v4. Theme is defined via CSS variables in `app/globals.css`.
+- Use `cn()` from `@/lib/utils` to merge Tailwind classes.
 - Use `twMerge` from `tailwind-merge` for conditional/merged classes.
-
-## Dates
-- Use `date-fns` for all date manipulation (parsing, formatting, arithmetic). No manual `new Date()` string wrangling.
-
-## Language
-- TypeScript in strict mode.
-
-## Data Storage
-- Store data as flat JSON files in the `data/` directory.
-- Only migrate to SQLite if file-based storage becomes insufficient.
-
-## Linting & Formatting
-- Biome (not ESLint). Run `bun run lint` to check and `bun run format` to auto-format.
-
-## Package Manager
-- Bun.
-
-## Path Aliases
-- `@/*` maps to the project root (configured in `tsconfig.json`).
+- Use Suspense boundaries and `loading.tsx`/`error.tsx` for async states — no manual `isLoading` checks.
+- Use `date-fns` for all date manipulation. No manual `new Date()` string wrangling.
+- Store data as flat JSON in `data/`. Only migrate to SQLite when files aren't enough.
 
 ## PWA (Serwist)
 - Uses `@serwist/turbopack` (Turbopack-compatible; not `@serwist/next` which is webpack-only).
