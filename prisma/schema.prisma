@@ -17,3 +17,16 @@ model PageView {
   @@index([pathname])
   @@index([timestamp])
 }
+
+model PerfMetric {
+  id        String   @id @default(cuid())
+  pathname  String
+  name      String // "page-duration", "LCP", "FCP", "CLS", "INP", "TTFB"
+  value     Float // milliseconds (or unitless for CLS)
+  timestamp DateTime
+  createdAt DateTime @default(now())
+
+  @@index([pathname])
+  @@index([name])
+  @@index([timestamp])
+}

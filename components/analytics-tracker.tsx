@@ -2,16 +2,14 @@
 
 import { useEffect } from "react";
 
-interface AnalyticsState {
-	getPageLoadTime: () => number;
-	getCurrentPathname: () => string;
-	sendAnalytics: (pathname: string, duration: number) => void;
+interface PerfState {
+	flushPageMetrics: () => void;
 }
 
-function getState(): AnalyticsState | null {
+function getPerf(): PerfState | null {
 	return (
 		((window as unknown as Record<string, unknown>)
-			.__analyticsState as AnalyticsState | null) ?? null
+			.__perf as PerfState | null) ?? null
 	);
 }
 
@@ -19,22 +17,12 @@ export function AnalyticsTracker() {
 	useEffect(() => {
 		function handleVisibilityChange() {
 			if (document.visibilityState === "hidden") {
-				const state = getState();
-				if (!state) return;
-				const duration = Date.now() - state.getPageLoadTime();
-				if (duration > 0) {
-					state.sendAnalytics(state.getCurrentPathname(), duration);
-				}
+				getPerf()?.flushPageMetrics();
 			}
 		}
 
 		function handleBeforeUnload() {
-			const state = getState();
-			if (!state) return;
-			const duration = Date.now() - state.getPageLoadTime();
-			if (duration > 0) {
-				state.sendAnalytics(state.getCurrentPathname(), duration);
-			}
+			getPerf()?.flushPageMetrics();
 		}
 
 		document.addEventListener("visibilitychange", handleVisibilityChange);
