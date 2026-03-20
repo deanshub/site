@@ -1,0 +1,8 @@
+{
+	"crons": [
+		{
+			"path": "/api/cron/airefresh",
+			"schedule": "0 0 * * *"
+		}
+	]
+}

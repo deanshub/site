@@ -14,7 +14,6 @@ export default defineConfig({
 		testTimeout: 5000,
 		hookTimeout: 5000,
 		teardownTimeout: 5000,
-		maxForks: 4,
 		fileParallelism: true,
 		maxConcurrency: 10,
 		coverage: {

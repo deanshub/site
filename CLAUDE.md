@@ -25,7 +25,6 @@ This is an AI-generated web app. The entire codebase is written and maintained b
 - Use `twMerge` from `tailwind-merge` for conditional/merged classes.
 - Use Suspense boundaries and `loading.tsx`/`error.tsx` for async states — no manual `isLoading` checks.
 - Use `date-fns` for all date manipulation. No manual `new Date()` string wrangling.
-- Store data as flat JSON in `data/`. Only migrate to SQLite when files aren't enough.
 
 ## PWA (Serwist)
 - Uses `@serwist/turbopack` (Turbopack-compatible; not `@serwist/next` which is webpack-only).
