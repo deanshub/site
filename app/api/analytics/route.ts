@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import {
+	addPageView,
+	addPerfMetric,
+	getPageViews,
+	getPerfMetrics,
+} from "@/lib/github-data";
 
 const ALLOWED_METRIC_NAMES = [
 	"page-duration",
@@ -31,13 +36,11 @@ export async function POST(request: Request) {
 				return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
 			}
 
-			await prisma.perfMetric.create({
-				data: {
-					pathname,
-					name,
-					value,
-					timestamp: new Date(timestamp),
-				},
+			await addPerfMetric({
+				pathname,
+				name,
+				value,
+				timestamp: new Date(timestamp).toISOString(),
 			});
 
 			return NextResponse.json({ ok: true });
@@ -50,12 +53,10 @@ export async function POST(request: Request) {
 			return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
 		}
 
-		await prisma.pageView.create({
-			data: {
-				pathname,
-				duration: Math.round(duration),
-				timestamp: new Date(timestamp),
-			},
+		await addPageView({
+			pathname,
+			duration: Math.round(duration),
+			timestamp: new Date(timestamp).toISOString(),
 		});
 
 		return NextResponse.json({ ok: true });
@@ -77,19 +78,11 @@ export async function GET(request: Request) {
 		since.setDate(since.getDate() - days);
 
 		if (model === "metrics") {
-			const metrics = await prisma.perfMetric.findMany({
-				where: { timestamp: { gte: since } },
-				orderBy: { timestamp: "desc" },
-			});
-
+			const metrics = await getPerfMetrics(since);
 			return NextResponse.json(metrics);
 		}
 
-		const views = await prisma.pageView.findMany({
-			where: { timestamp: { gte: since } },
-			orderBy: { timestamp: "desc" },
-		});
-
+		const views = await getPageViews(since);
 		return NextResponse.json(views);
 	} catch {
 		return NextResponse.json(
